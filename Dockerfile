@@ -1,9 +1,59 @@
-FROM node:18-alpine AS base
+# Use the specified Python slim image as the base
+FROM python:3.11.10-slim-bookworm AS base
+
+# Set environment variables to ensure pip installs to the virtual environment
+ENV PATH="/root/.local/bin:${PATH}"
+
+# Install required packages for pipx and virtual environment
+RUN apt-get update && \
+    apt-get install -y \
+    curl \
+    gcc \
+    build-essential \
+    git \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install pipx using pip
+RUN pip install --no-cache-dir pipx
+
+# Ensure pipx's binary directory is in the PATH
+ENV PATH="/root/.local/bin:${PATH}"
+
+# Install virtualenv using pipx
+RUN pipx install virtualenv
+
+
+# Create a virtual environment as an example
+#RUN python -m venv /env
+
+WORKDIR /app
+
+RUN pipx install aider-chat
+
+# Set the working directory
+
+
+############ NODE INSTALLATION ############
+# Install curl and other required packages
+RUN apt-get update && apt-get install -y \
+    curl \
+    ca-certificates \
+    build-essential \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Node.js 18
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Verify installation
+#RUN node -v && npm -v
+############ NODE PROJECT CONFIG ############
 
 # Install dependencies only when needed
 FROM base AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
