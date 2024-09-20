@@ -15,21 +15,21 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/*
 
 # Install pipx using pip
-RUN pip install --no-cache-dir pipx
+#RUN pip install --no-cache-dir pipx
 
 # Ensure pipx's binary directory is in the PATH
 ENV PATH="/root/.local/bin:${PATH}"
 
+WORKDIR /app
 # Install virtualenv using pipx
-RUN pipx install virtualenv
+RUN python -m pip install aider-chat
 
 
 # Create a virtual environment as an example
 #RUN python -m venv /env
 
-WORKDIR /app
 
-RUN pipx install aider-chat
+#RUN pipx install aider-chat
 
 # Set the working directory
 
@@ -69,6 +69,7 @@ RUN \
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
+ENV NODE_ENV=development
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
