@@ -64,6 +64,7 @@ jobs:
 
       # BEGIN - Docker auth and build
       ##docker tag SOURCE-IMAGE LOCATION-docker.pkg.dev/PROJECT-ID/REPOSITORY/IMAGE:TAG
+      #docker tag nextarter-chakra gcr.io/heptastack/nextarter-chakra:latest
       # If you already have a container image, you can omit these steps.
       - name: 'Docker Auth'
         uses: 'docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567' # docker/login-action@v3
@@ -76,6 +77,7 @@ jobs:
         run: |-        
           DOCKER_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}"
           docker build --tag "${DOCKER_TAG}" .
+          gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://us-central1-docker.pkg.dev
           docker push "${DOCKER_TAG}"
       - name: 'Deploy to Cloud Run'
 
