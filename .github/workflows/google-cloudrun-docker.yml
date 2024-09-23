@@ -2,10 +2,8 @@ name: Build || Push || Deploy Cloud
 
 on:
   push:
-    # branches:
-    #   - feature/ci  # Change this to match your main branch name
-    tags:
-      - main  # Matches tags like v1.x.x
+    branches:
+      - main
 env:
   PROJECT_ID: heptastack
   REGION: us-central1
