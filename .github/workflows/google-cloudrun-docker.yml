@@ -52,7 +52,7 @@ jobs:
       # Push the Docker image to Google Artifact Registry
       - name: Push Docker image to Google Artifact Registry
         run: |
-          docker push ${{ env.GAR_HOST }}/${{ env.PROJECT_ID }}/my-repo/my-image:latest
+          docker push ${{ env.GAR_HOST }}/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:latest
 
       - name: 'Deploy to Cloud Run'
 
