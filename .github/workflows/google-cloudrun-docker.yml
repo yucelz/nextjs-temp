@@ -31,7 +31,7 @@ jobs:
         docker push $IMAGE
       env:
         PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-        REPO_NAME: my-app # Change this to your GCR repo name
+        REPO_NAME: github-repo # Change this to your GCR repo name
 
     - name: Deploy to Cloud Run
       run: |
@@ -43,5 +43,5 @@ jobs:
           --memory 512Mi
       env:
         PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-        SERVICE_NAME: my-cloud-run-service # Replace with your Cloud Run service name
+        SERVICE_NAME: next-temp-service # Replace with your Cloud Run service name
         REGION: us-central1 # Replace with your region
