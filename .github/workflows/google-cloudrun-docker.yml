@@ -9,7 +9,7 @@ env:
   REGION: us-central1
   SERVICE: next-temp
   REPOSITORY: heptastack-repo
-  #GAR_LOCATION: us-central1-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{env.SERVICE}}/
+  GAR_HOST: us-central1-docker.pkg.dev
 
 jobs:
   build-and-push:
@@ -42,13 +42,17 @@ jobs:
           registry: ${{env.REGION}}-docker.pkg.dev
           username: _json_key
           password: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+          #export_default_credentials: true
 
-      - name: 'Build and Push Container'
-        run: |-        
-          DOCKER_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}:${{ env.SERVICE }}"
-          docker build --tag "${DOCKER_TAG}" .
-          gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://us-central1-docker.pkg.dev
-          docker push "${DOCKER_TAG}"
+      # Build the Docker image
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.GAR_HOST }}/${{ secrets.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:latest .
+
+      # Push the Docker image to Google Artifact Registry
+      - name: Push Docker image to Google Artifact Registry
+        run: |
+          docker push ${{ secrets.GAR_HOST }}/${{ secrets.PROJECT_ID }}/my-repo/my-image:latest
 
       - name: 'Deploy to Cloud Run'
 
@@ -60,7 +64,7 @@ jobs:
           region: '${{ env.REGION }}'
           # NOTE: If using a pre-built image, update the image name below:
 
-          image: '${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}:${{ env.SERVICE }}'
+          image: '${{ secrets.GAR_HOST }}/${{ secrets.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:latest'
       # If required, use the Cloud Run URL output in later steps
       - name: 'Show output'
         run: |2-
