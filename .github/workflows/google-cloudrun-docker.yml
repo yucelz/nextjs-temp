@@ -26,20 +26,22 @@ jobs:
       - id: 'auth'
         uses: 'google-github-actions/auth@v2'
         with:
+          token_format: access_token
           credentials_json: '${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}'
 
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v2'
 
       - name: 'Use gcloud CLI'
-        run: 'gcloud info'
+        run: 'gcloud auth list --filter=status:ACTIVE --format="value(account)"'
 
-      - name: Configure Docker
-        uses: docker/login-action@v2
+      
+      - name: Login to GAR
+        uses: docker/login-action@v3
         with:
-          registry: us-central1-docker.pkg.dev
-          username: _json_key
-          password: ${{ secrets.GCP_SA_KEY }}
+          registry: ${{env.REGION}}-docker.pkg.dev
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
 
       - name: Build Docker image
         run: |
