@@ -47,12 +47,12 @@ jobs:
       # Build the Docker image
       - name: Build Docker image
         run: |
-          docker build -t ${{ env.GAR_HOST }}/${{ secrets.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:latest .
+          docker build -t ${{ env.GAR_HOST }}/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:latest .
 
       # Push the Docker image to Google Artifact Registry
       - name: Push Docker image to Google Artifact Registry
         run: |
-          docker push ${{ env.GAR_HOST }}/${{ secrets.PROJECT_ID }}/my-repo/my-image:latest
+          docker push ${{ env.GAR_HOST }}/${{ env.PROJECT_ID }}/my-repo/my-image:latest
 
       - name: 'Deploy to Cloud Run'
 
@@ -64,7 +64,7 @@ jobs:
           region: '${{ env.REGION }}'
           # NOTE: If using a pre-built image, update the image name below:
 
-          image: '${{ env.GAR_HOST }}/${{ secrets.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:latest'
+          image: '${{ env.GAR_HOST }}/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:latest'
       # If required, use the Cloud Run URL output in later steps
       - name: 'Show output'
         run: |2-
