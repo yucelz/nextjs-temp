@@ -8,7 +8,7 @@ env:
   PROJECT_ID: heptastack
   REGION: us-central1
   SERVICE: next-temp
-  GAR_LOCATION: us-central1-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{env.SERVICE}}/
+  #GAR_LOCATION: us-central1-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{env.SERVICE}}/
 
 jobs:
   build-and-push:
