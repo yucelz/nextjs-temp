@@ -66,6 +66,9 @@ jobs:
 
           image: '${{ env.GAR_HOST }}/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:latest'
       # If required, use the Cloud Run URL output in later steps
+      - name: 'gcloud CLI Allowing unauthenticated'
+        run: 'gcloud run services add-iam-policy-binding ${{ env.SERVICE }} --member="allUsers" --role="roles/run.invoker"'      
+      
       - name: 'Show output'
         run: |2-
 
