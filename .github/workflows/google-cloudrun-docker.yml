@@ -38,6 +38,7 @@ env:
   PROJECT_ID: 'heptastack' # TODO: update to your Google Cloud project ID
   REGION: 'us-central1' # TODO: update to your region
   SERVICE: 'next-temp' # TODO: update to your service name
+  REPOSITORY_NAME: 'github-repository'
   WORKLOAD_IDENTITY_PROVIDER: 'projects/302836092825/locations/global/workloadIdentityPools/github-pool-2/providers/github-provider-2' # TODO: update to your workload identity provider
 
 jobs:
@@ -75,7 +76,7 @@ jobs:
 
       - name: 'Build and Push Container'
         run: |-        
-          DOCKER_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}"
+          DOCKER_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY_NAME }}:${{ github.sha }}"
           docker build --tag "${DOCKER_TAG}" .
           gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://us-central1-docker.pkg.dev
           docker push "${DOCKER_TAG}"
