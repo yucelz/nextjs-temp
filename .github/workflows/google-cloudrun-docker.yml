@@ -38,9 +38,9 @@ jobs:
       - name: Login to GAR
         uses: docker/login-action@v3
         with:
-          registry: ${{env.REGION}}-docker.pkg.dev
-          username: oauth2accesstoken
-          password: ${{ steps.auth.outputs.access_token }}
+          registry: ${{SERVICE}}-docker.pkg.dev
+          username: _json_key
+          password: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
       - name: Build Docker image
         run: |
